@@ -36,8 +36,6 @@ func init() {
 	AddToSchemes = append(AddToSchemes, addOpenShiftToScheme)
 }
 
-type registerFunction func(*runtime.Scheme) error
-
 // addOpenShiftToScheme adds OpenShift types to the scheme
 func addOpenShiftToScheme(scheme *runtime.Scheme) error {
 	var err error
@@ -55,13 +53,5 @@ func addOpenShiftToScheme(scheme *runtime.Scheme) error {
 	// OpenShift console API
 	err = doAdd(console.Install, scheme, err)
 
-	return err
-}
-
-func doAdd(addToScheme registerFunction, scheme *runtime.Scheme, err error) error {
-	callErr := addToScheme(scheme)
-	if err == nil {
-		return callErr
-	}
 	return err
 }

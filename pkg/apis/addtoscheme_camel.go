@@ -19,22 +19,21 @@ package apis
 
 import (
 	"k8s.io/apimachinery/pkg/runtime"
+
+	camelv1 "github.com/apache/camel-k/pkg/apis/camel/v1"
+	camelv1alpha1 "github.com/apache/camel-k/pkg/apis/camel/v1alpha1"
 )
 
-// AddToSchemes may be used to add all resources defined in the project to a Scheme
-var AddToSchemes runtime.SchemeBuilder
-
-// AddToScheme adds all Resources to the Scheme
-func AddToScheme(s *runtime.Scheme) error {
-	return AddToSchemes.AddToScheme(s)
+func init() {
+	// Register the types with the Scheme so the components can map objects to GroupVersionKinds and back
+	AddToSchemes = append(AddToSchemes, addCamelToScheme)
 }
 
-type registerFunction func(*runtime.Scheme) error
+func addCamelToScheme(scheme *runtime.Scheme) error {
+	var err error
 
-func doAdd(addToScheme registerFunction, scheme *runtime.Scheme, err error) error {
-	callErr := addToScheme(scheme)
-	if err == nil {
-		return callErr
-	}
+	err = doAdd(camelv1.AddToScheme, scheme, err)
+	err = doAdd(camelv1alpha1.AddToScheme, scheme, err)
+
 	return err
 }

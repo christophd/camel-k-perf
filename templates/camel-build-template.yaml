@@ -1,0 +1,30 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: build-integration
+objects:
+  - apiVersion: camel.apache.org/v1
+    kind: Integration
+    metadata:
+      name: sample
+    spec:
+      flows:
+      - from:
+          parameters:
+              period: "5000"
+          steps:
+          - set-body:
+              constant: Hello Yaml !!!
+          - transform:
+              simple: ${body.toUpperCase()}
+          - to: log:info
+          uri: timer:tick
+      traits:
+        jvm:
+          configuration:
+            debug: true
+            debugSuspend: true
+        builder:
+          configuration:
+            properties:
+            - build-property = 1

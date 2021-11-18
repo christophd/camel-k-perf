@@ -22,7 +22,6 @@ func NewPerfCommand(ctx context.Context) (*cobra.Command, error) {
 		Short: "Perf is a performance test utility",
 	}
 
-	cmd.AddCommand(newCmdCleanup(&options))
 	cmd.AddCommand(newCmdGenerate(&options))
 
 	return &cmd, nil
