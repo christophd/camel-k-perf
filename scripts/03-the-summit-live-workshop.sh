@@ -1,16 +1,13 @@
 #!/bin/bash
 
+set -eu
+
 echo "Running scenario 03: The summit live workshop"
 
 location=$(dirname $0)
-cd $location
+source $location/functions.sh
 
-TEST_ID=03 \
-TEST_N=3000 \
-TEST_C=1000 \
-TEST_CR=10 \
-TEST_CB=1 \
-TEST_CP=0 \
-TEST_NC=0 \
-TEST_P=1 \
-./create-load.sh
+create_standard_users 2990 0 camel-03-nores
+create_standard_users 10 0 camel-03-full
+inject_peak_workload camel-no-resources.yaml 990 camel-03-nores
+inject_peak_workload camel-full.yaml 10 camel-03-full

@@ -1,16 +1,12 @@
 #!/bin/bash
 
+set -eu
+
 echo "Running scenario 02: Suddenly love for Camel"
 
 location=$(dirname $0)
-cd $location
+source $location/functions.sh
 
-TEST_ID=02 \
-TEST_N=3000 \
-TEST_C=1000 \
-TEST_CR=10 \
-TEST_CB=1 \
-TEST_CP=0 \
-TEST_NC=0 \
-TEST_P=0 \
-./create-load.sh
+create_standard_users 2000 0 camel-02-empty
+create_custom_users camel-no-resources.yaml 990 camel-02-nores
+create_custom_users camel-full.yaml 10 camel-02-full

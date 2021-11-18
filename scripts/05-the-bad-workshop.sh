@@ -1,16 +1,12 @@
 #!/bin/bash
 
+set -eu
+
 echo "Running scenario 05: The bad workshop"
 
 location=$(dirname $0)
-cd $location
+source $location/functions.sh
 
-TEST_ID=05 \
-TEST_N=3000 \
-TEST_C=100 \
-TEST_CR=0 \
-TEST_CB=0 \
-TEST_CP=100 \
-TEST_NC=0 \
-TEST_P=1 \
-./create-load.sh
+create_standard_users 2900 0 camel-05-empty
+create_standard_users 100 0 camel-05-platform
+inject_peak_workload camel-platform.yaml 100 camel-05-platform
