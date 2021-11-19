@@ -18,7 +18,7 @@ create_standard_users() {
 
   pushd . > /dev/null
   cd $location && cd ../../toolchain-e2e || return
-  echo go run setup/main.go --users $num --batch $batch_num --default $workload --custom 0 --username $prefix
+  go run setup/main.go --users $num --batch $batch_num --default $workload --custom 0 --username $prefix
   popd > /dev/null || return
 }
 
@@ -43,7 +43,7 @@ create_custom_users() {
 
   pushd . > /dev/null
   cd $location && cd ../../toolchain-e2e || return
-  echo go run setup/main.go --template $full_template --users $num --batch $batch_num --default 0 --custom $num --username $prefix
+  go run setup/main.go --template $full_template --users $num --batch $batch_num --default 0 --custom $num --username $prefix
   popd > /dev/null || return
 }
 
@@ -65,7 +65,7 @@ inject_peak_workload() {
 
   pushd . > /dev/null
   cd $location && cd ..
-  echo go run ./cmd/perf generate --parallelism $parallelism --number $workload --namespace-prefix $prefix $full_template
+  go run ./cmd/perf generate --parallelism $parallelism --number $workload --namespace-prefix $prefix $full_template
   popd > /dev/null || return
 }
 
@@ -82,7 +82,7 @@ create_users_with_custom_build() {
   do
     sed -e "s/build-property =.*$/build-property = $i/" ../camel-k-perf/templates/camel-build-template.yaml > /tmp/camel-build-$i.yaml
 
-    echo go run setup/main.go --template /tmp/camel-build-$i.yaml --users 1 --batch 1 --default 0 --custom 1 --username $prefix
+    go run setup/main.go --template /tmp/camel-build-$i.yaml --users 1 --batch 1 --default 0 --custom 1 --username $prefix
   done
 
   popd > /dev/null || return
