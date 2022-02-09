@@ -82,7 +82,7 @@ create_users_with_custom_build() {
   do
     sed -e "s/build-property =.*$/build-property = $i/" ../camel-k-perf/templates/camel-build-template.yaml > /tmp/camel-build-$i.yaml
 
-    go run setup/main.go --template /tmp/camel-build-$i.yaml --users 1 --batch 1 --default 0 --custom 1 --username $prefix
+    go run setup/main.go --template /tmp/camel-build-$i.yaml --users 1 --batch 1 --default 0 --custom 1 --username $prefix-$i
   done
 
   popd > /dev/null || return
