@@ -10,7 +10,7 @@ objects:
   - apiVersion: camel.apache.org/v1
     kind: Integration
     metadata:
-      name: sample
+      name: camel-k-perf
     spec:
       flows:
       - from:

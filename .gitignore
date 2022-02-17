@@ -2,3 +2,9 @@
 .project
 .metadata
 /perf
+
+/metrics-*
+
+/results-*
+resource-list.namespaced
+resource-list.cluster
