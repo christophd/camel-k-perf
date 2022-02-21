@@ -90,6 +90,7 @@ format_date(){
     fi
 }
 
+echo "Collecting integration results"
 # Collect timestamps
 {
 # Integration resources in user namespaces
@@ -102,6 +103,19 @@ oc get deployment --all-namespaces -o json | jq -r '.items[] | select(.metadata.
 oc logs $(oc get $(oc get pods -n openshift-operators -o name | grep camel-k-operator) -n openshift-operators -o jsonpath='{.metadata.name}') -n openshift-operators > $RESULTS/camel-k-operator.log
 
 timestamps $RESULTS/integrations.json $RESULTS/deployments.json $RESULTS/camel-k-operator.log $RESULTS
+} &
+
+echo "Collecting resource counts"
+# Collect resource counts
+{
+oc api-resources --verbs=list --namespaced -o name | sort > resource-list.namespaced
+oc api-resources --verbs=list --namespaced=false -o name | sort > resource-list.cluster
+RESOURCE_COUNTS_OUT=$RESULTS/resource-count.csv
+echo "Resource;UserNamespaces;AllNamespaces" > $RESOURCE_COUNTS_OUT
+for i in $(cat resource-list.namespaced resource-list.cluster | sort); do
+    resource_counts $i >> $RESOURCE_COUNTS_OUT;
+    echo -n "."
+done
 } &
 
 wait
