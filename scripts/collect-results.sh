@@ -26,7 +26,7 @@ timestamps(){
     LOG_SEG_DIR=$RESULTS/operator-log-segments
     mkdir -p $LOG_SEG_DIR
 
-    jq -rc '((.metadata.namespace) + ";" + (.metadata.name) + ";" + (.metadata.creationTimestamp) + ";" + (if (.status == null) then ("") else (.status.conditions[] | select(.type=="Ready").lastTransitionTime) end ))' $CR_JSON > $RESULTS/tmp.csv
+    jq -rc '((.metadata.namespace) + ";" + (.metadata.name) + ";" + (.metadata.creationTimestamp) + ";" + (if (.status == null) then ("") else (.status.conditions[] | select(.type=="Ready").firstTruthyTime) end ))' $CR_JSON > $RESULTS/tmp.csv
     echo "Integration;Created;ReconciledTimestamp;Ready;RunningTimestamp" > $RESULTS/cr-timestamps.csv
     for i in $(cat $RESULTS/tmp.csv); do
         ns=$(echo -n $i | cut -d ";" -f1)
@@ -46,9 +46,9 @@ timestamps(){
         echo -n ";";
         done_ts=$(cat "$log" | jq -rc 'if ."phase-to" != null then select(."phase-to" | contains("Running")) | select(."request-namespace" | contains("'$ns'")).ts else empty end' | head -n1)
         if [ -n "$done_ts" ]; then
-            echo $(format_date "$done_ts" "+%F %T" "%s")
+            echo $(format_date "$done_ts" "+%F %T" "%s");
         else
-            echo ""
+            echo "";
         fi
     done >> $RESULTS/cr-timestamps.csv
     rm -f $RESULTS/tmp.csv
@@ -76,17 +76,21 @@ format_date(){
     OUTPUT_FORMAT=${2:-"+%F %T"}
     INPUT_FORMAT=${3:-"%Y-%m-%dT%H:%M:%SZ"}
 
-    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        if [[ "$OUTPUT_FORMAT" == "%s" ]]; then
-            DATE="@$DATE"
-        fi
+    if [ -n "$DATE" ]; then
+        if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+            if [[ "$INPUT_FORMAT" == "%s" ]]; then
+                DATE="@$DATE"
+            fi
 
-        echo $(date -d "$DATE" "$OUTPUT_FORMAT");
-    elif [[ "$OSTYPE" == "darwin"* ]]; then
-        # MacOS
-        echo -n $(date -j -f "$INPUT_FORMAT" $(echo -n "$DATE" | cut -d "." -f1) "$OUTPUT_FORMAT");
+            echo -n $(date -d "$DATE" "$OUTPUT_FORMAT");
+        elif [[ "$OSTYPE" == "darwin"* ]]; then
+            # MacOS
+            echo -n $(date -j -f "$INPUT_FORMAT" $(echo -n "$DATE" | cut -d "." -f1) "$OUTPUT_FORMAT");
+        else
+            echo -n "$DATE"
+        fi
     else
-        echo "$DATE"
+        echo -n ""
     fi
 }
 
@@ -114,7 +118,7 @@ RESOURCE_COUNTS_OUT=$RESULTS/resource-count.csv
 echo "Resource;UserNamespaces;AllNamespaces" > $RESOURCE_COUNTS_OUT
 for i in $(cat resource-list.namespaced resource-list.cluster | sort); do
     resource_counts $i >> $RESOURCE_COUNTS_OUT;
-    echo -n "."
+    echo -n ".";
 done
 } &
 
