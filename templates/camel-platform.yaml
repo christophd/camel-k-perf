@@ -1,7 +1,7 @@
 kind: Template
 apiVersion: v1
 metadata:
-  name: idle-integration
+  name: platform-integration
 objects:
   - apiVersion: camel.apache.org/v1
     kind: IntegrationPlatform
@@ -15,7 +15,7 @@ objects:
       flows:
       - from:
           parameters:
-              period: "5000"
+              period: "50000"
           steps:
           - set-body:
               constant: Hello Yaml !!!
