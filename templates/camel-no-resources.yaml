@@ -11,7 +11,7 @@ objects:
       flows:
       - from:
           parameters:
-              period: "50000"
+            period: "50000"
           steps:
           - set-body:
               constant: Hello Yaml !!!
