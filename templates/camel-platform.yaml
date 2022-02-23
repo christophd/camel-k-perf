@@ -23,8 +23,3 @@ objects:
               simple: ${body.toUpperCase()}
           - to: log:info
           uri: timer:tick
-      traits:
-        jvm:
-          configuration:
-            debug: true
-            debugSuspend: true

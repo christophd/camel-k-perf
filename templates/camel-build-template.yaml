@@ -20,10 +20,6 @@ objects:
           - to: log:info
           uri: timer:tick
       traits:
-        jvm:
-          configuration:
-            debug: true
-            debugSuspend: true
         builder:
           configuration:
             properties:
