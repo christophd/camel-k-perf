@@ -1,9 +1,12 @@
 .idea
 .project
 .metadata
+.DS_Store
 /perf
 
 /metrics-*
+
+/operator-logs-*
 
 /results-*
 resource-list.namespaced
