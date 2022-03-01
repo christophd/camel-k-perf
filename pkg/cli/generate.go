@@ -32,7 +32,7 @@ func newCmdGenerate(rootCmdOptions *RootCmdOptions) *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&options.NamespacePrefix, "namespace-prefix", "", "The prefix of the namespaces used to inject data (need to be pre-existing)")
-	cmd.Flags().StringVar(&options.NamespaceSuffix, "namespace-suffix", "", "The suffix of the namespaces used to inject data (need to be pre-existing)")
+	cmd.Flags().StringVar(&options.NamespaceSuffix, "namespace-suffix", "-stage", "The suffix of the namespaces used to inject data (need to be pre-existing)")
 	cmd.Flags().IntVar(&options.Parallelism, "parallelism", -1, "The maximum number of user load to create in parallel (infinite if less than or equal to 0)")
 	cmd.Flags().IntVar(&options.Number, "number", 1, "The number of users to simulate")
 	cmd.Flags().IntVar(&options.Attempts, "attempts", 5, "The number of times the creation of a resource should be attempted before giving up")
