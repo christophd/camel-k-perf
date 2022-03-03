@@ -4,7 +4,6 @@ set -eu
 
 location=$(dirname $0)
 test_batch=${TEST_BATCH:-10}
-parallelism=${PARALLELISM:-50}
 
 create_standard_users() {
   num=$1
@@ -50,7 +49,8 @@ create_custom_users() {
 inject_peak_workload() {
   template=$1
   workload=${2:-0}
-  prefix=$3
+  parallelism=${3:-50}
+  prefix=${4:-camel}
 
   echo "Injecting $workload users peak workload from template $template in namespaces $prefix..."
 

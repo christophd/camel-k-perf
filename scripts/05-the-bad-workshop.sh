@@ -12,4 +12,4 @@ create_standard_users 100 0 camel-05-platform
 
 sleep 120s
 
-inject_peak_workload camel-platform.yaml 100 camel-05-platform
+inject_peak_workload camel-platform.yaml 100 5 camel-05-platform

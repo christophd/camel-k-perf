@@ -12,5 +12,5 @@ create_standard_users 550 0 camel-04-nores
 
 sleep 120s
 
-inject_peak_workload camel-no-resources.yaml 550 camel-04-nores
+inject_peak_workload camel-no-resources.yaml 550 50 camel-04-nores
 create_users_with_custom_build 50 camel-04-builds
