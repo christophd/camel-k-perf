@@ -27,7 +27,7 @@ timestamps(){
     mkdir -p $LOG_SEG_DIR
 
     jq -rc '((.metadata.namespace) + ";" + (.metadata.name) + ";" + (.metadata.creationTimestamp) + ";" + (if (.status == null) then ("") else (.status.conditions[] | select(.type=="Ready").firstTruthyTime) end ))' $CR_JSON > $RESULTS/tmp.csv
-    echo "Integration;Created;ReconciledTimestamp;Ready;RunningTimestamp" > $RESULTS/cr-timestamps.csv
+    echo "Integration;Created;ReconciledTimestamp;Ready;RunningTimestamp;ReadyAfter;BuildDuration;BuildQueued" > $RESULTS/cr-timestamps.csv
     for i in $(cat $RESULTS/tmp.csv); do
         ns=$(echo -n $i | cut -d ";" -f1)
         name=$(echo -n $i | cut -d ";" -f2)
@@ -46,15 +46,36 @@ timestamps(){
         echo -n ";";
         done_ts=$(cat "$log" | jq -rc 'if ."phase-to" != null then select(."phase-to" | contains("Running")) | select(."request-namespace" | contains("'$ns'")).ts else empty end' | head -n1)
         if [ -n "$done_ts" ]; then
-            echo $(format_date "$done_ts" "+%F %T" "%s");
+            echo -n $(format_date "$done_ts" "+%F %T" "%s");
         else
-            echo "";
+            echo -n 0
+        fi
+        echo -n ";";
+        ready_after=$(cat $log | jq -rc 'if ."request-namespace" != null then select(."request-namespace" | contains("'$ns'")) | select(.msg | contains("First readiness after"))."ready-after" else empty end' | head -n1)
+        if [ -n "$ready_after" ]; then
+            echo -n $ready_after;
+        else
+            echo -n 0
+        fi
+        echo -n ";";
+        build_duration=$(cat $log | jq -rc 'if ."request-namespace" != null then select(."request-namespace" | contains("'$ns'")) | select(.msg | contains("Build duration"))."build-duration" else empty end' | head -n1)
+        if [ -n "$build_duration" ]; then
+            echo -n $build_duration;
+        else
+            echo -n 0
+        fi
+        echo -n ";";
+        build_queue_duration=$(cat $log | jq -rc 'if ."request-namespace" != null then select(."request-namespace" | contains("'$ns'")) | select(.msg | contains("Build queue duration"))."build-queue-duration" else empty end' | head -n1)
+        if [ -n "$build_queue_duration" ]; then
+            echo $build_queue_duration;
+        else
+            echo "0";
         fi
     done >> $RESULTS/cr-timestamps.csv
     rm -f $RESULTS/tmp.csv
 
     jq -rc '((.metadata.namespace) + ";" + (.metadata.name) + ";" + (.metadata.creationTimestamp) + ";" + (.status.conditions[] | select(.type=="Available") | select(.status=="True").lastTransitionTime))' $DEPLOYMENTS_JSON > $RESULTS/tmp.csv
-    echo "Namespace;Deployment;Deployment_Created;Deployment_Available;Integration_Name;Integration_Created;Integration_ReconciledTimestamp;Integration_Ready;Integration_RunningTimestamp" > $RESULTS/integration-timestamps.csv
+    echo "Namespace;Deployment;Deployment_Created;Deployment_Available;Integration_Name;Integration_Created;Integration_ReconciledTimestamp;Integration_Ready;Integration_RunningTimestamp;Integration_ReadyAfter;Integration_BuildDuration;Integration_BuildQueued" > $RESULTS/integration-timestamps.csv
     for i in $(cat $RESULTS/tmp.csv); do
         NS=$(echo -n $i | cut -d ";" -f1);
         echo -n $NS;
