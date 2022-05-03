@@ -7,7 +7,7 @@ echo "Running scenario 05: The bad workshop"
 location=$(dirname $0)
 source $location/functions.sh
 
-create_standard_users 1900 0 camel-05-empty
+create_standard_users 1900 1900 camel-05-normal
 create_standard_users 100 0 camel-05-platform
 
 sleep 120s

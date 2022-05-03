@@ -7,7 +7,7 @@ echo "Running scenario 04: Good cameleers share builds"
 location=$(dirname $0)
 source $location/functions.sh
 
-create_standard_users 1400 0 camel-04-empty
+create_standard_users 1400 1400 camel-04-normal
 create_standard_users 550 0 camel-04-nores
 
 sleep 120s
