@@ -1,0 +1,22 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: kamelet-integration
+objects:
+  - apiVersion: camel.apache.org/v1alpha1
+    kind: KamletBinding
+    metadata:
+      name: camel-k-perf
+    spec:
+      source:
+        ref:
+          kind: Kamelet
+          apiVersion: camel.apache.org/v1alpha1
+          name: timer-source
+        properties:
+          message: "Hello world!"
+      sink:
+        ref:
+          kind: Kamelet
+          apiVersion: camel.apache.org/v1alpha1
+          name: log-sink
