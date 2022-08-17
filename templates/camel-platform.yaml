@@ -10,10 +10,6 @@ objects:
     spec:
       build:
         buildStrategy: pod
-      traits:
-        gc:
-          configuration:
-            enabled: false
   - apiVersion: camel.apache.org/v1
     kind: Integration
     metadata:
