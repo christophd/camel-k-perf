@@ -3,7 +3,6 @@
 set -eu
 
 location=$(dirname $0)
-test_batch=${TEST_BATCH:-10}
 
 create_standard_users() {
   num=$1
@@ -12,12 +11,9 @@ create_standard_users() {
 
   echo "Creating $num standard users, $workload with workload, in namespaces $prefix..."
 
-  batch_num=$test_batch
-  if [ $(( $num % $batch_num )) -ne 0 ]; then batch_num=1; fi
-
   pushd . > /dev/null
   cd $location && cd ../../toolchain-e2e || return
-  go run setup/main.go --interactive=false --users $num --batch $batch_num --default $workload --custom 0 --username $prefix --idler-timeout 0s
+  go run setup/main.go --interactive=false --users $num --default $workload --custom 0 --username $prefix --idler-timeout 0s
   popd > /dev/null || return
 }
 
@@ -37,12 +33,9 @@ create_custom_users() {
     popd > /dev/null || return
   fi
 
-  batch_num=$test_batch
-  if [ $(( $num % $batch_num )) -ne 0 ]; then batch_num=1; fi
-
   pushd . > /dev/null
   cd $location && cd ../../toolchain-e2e || return
-  go run setup/main.go --interactive=false --template $full_template --users $num --batch $batch_num --default 0 --custom $num --username $prefix --idler-timeout 0s
+  go run setup/main.go --interactive=false --template $full_template --users $num --default 0 --custom $num --username $prefix --idler-timeout 0s
   popd > /dev/null || return
 }
 
@@ -82,7 +75,7 @@ create_users_with_custom_build() {
   do
     sed -e "s/build-property =.*$/build-property = $i/" ../camel-k-perf/templates/camel-build-template.yaml > /tmp/camel-build-$i.yaml
 
-    go run setup/main.go --interactive=false --template /tmp/camel-build-$i.yaml --users 1 --batch 1 --default 0 --custom 1 --username $prefix-$i --idler-timeout 0s
+    go run setup/main.go --interactive=false --template /tmp/camel-build-$i.yaml --users 1 --default 0 --custom 1 --username $prefix-$i --idler-timeout 0s
   done
 
   popd > /dev/null || return
