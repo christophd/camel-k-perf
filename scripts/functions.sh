@@ -13,7 +13,7 @@ create_standard_users() {
 
   pushd . > /dev/null
   cd $location && cd ../../toolchain-e2e || return
-  go run setup/main.go --interactive=false --users $num --default $workload --custom 0 --username $prefix --idler-timeout 0s
+  go run setup/main.go --interactive=false --users $num --default $workload --custom 0 --username $prefix
   popd > /dev/null || return
 }
 
@@ -35,7 +35,7 @@ create_custom_users() {
 
   pushd . > /dev/null
   cd $location && cd ../../toolchain-e2e || return
-  go run setup/main.go --interactive=false --template $full_template --users $num --default 0 --custom $num --username $prefix --idler-timeout 0s
+  go run setup/main.go --interactive=false --template $full_template --users $num --default 0 --custom $num --username $prefix
   popd > /dev/null || return
 }
 
@@ -75,7 +75,7 @@ create_users_with_custom_build() {
   do
     sed -e "s/build-property =.*$/build-property = $i/" ../camel-k-perf/templates/camel-build-template.yaml > /tmp/camel-build-$i.yaml
 
-    go run setup/main.go --interactive=false --template /tmp/camel-build-$i.yaml --users 1 --default 0 --custom 1 --username $prefix-$i --idler-timeout 0s
+    go run setup/main.go --interactive=false --template /tmp/camel-build-$i.yaml --users 1 --default 0 --custom 1 --username $prefix-$i
   done
 
   popd > /dev/null || return
