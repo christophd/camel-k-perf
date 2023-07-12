@@ -35,7 +35,7 @@ create_custom_users() {
 
   pushd . > /dev/null
   cd $location && cd ../../toolchain-e2e || return
-  go run setup/main.go --interactive=false --template $full_template --users $num --default 0 --custom $num --username $prefix
+  go run setup/main.go --interactive=false --template $full_template --users $num --default 0 --custom $num --username $prefix --skip-idler
   popd > /dev/null || return
 }
 
@@ -70,7 +70,7 @@ create_custom_users_no_install() {
 
   pushd . > /dev/null
   cd $location && cd ../../toolchain-e2e || return
-  go run setup/main.go --interactive=false --template $full_template --users $num --default 0 --custom $num --username $prefix --skip-wait --skip-install-operators
+  go run setup/main.go --interactive=false --template $full_template --users $num --default 0 --custom $num --username $prefix --skip-idler --skip-wait --skip-install-operators
   popd > /dev/null || return
 }
 
