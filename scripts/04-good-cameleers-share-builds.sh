@@ -9,5 +9,5 @@ source $location/functions.sh
 
 create_standard_users 1400 1400 camel-04-normal
 
-create_custom_users camel-no-resources.yaml 550 camel-04-nores
-create_custom_users camel-build-template.yaml 50 camel-04-builds
+create_custom_users_no_install camel-no-resources.yaml 550 camel-04-nores
+create_custom_users_no_install camel-build-template.yaml 50 camel-04-builds
