@@ -9,7 +9,9 @@ objects:
       name: camel-k
     spec:
       build:
-        buildStrategy: pod
+        buildConfiguration:
+          orderStrategy: fifo
+          strategy: pod
   - apiVersion: camel.apache.org/v1
     kind: Integration
     metadata:
