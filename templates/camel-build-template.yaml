@@ -2,6 +2,8 @@ kind: Template
 apiVersion: v1
 metadata:
   name: build-integration
+parameters:
+  - name: CURRENT_USER_NAMESPACE
 objects:
   - apiVersion: camel.apache.org/v1
     kind: Integration
@@ -15,12 +17,10 @@ objects:
           steps:
           - set-body:
               constant: Hello Yaml !!!
-          - transform:
-              simple: ${body.toUpperCase()}
           - to: log:info
           uri: timer:tick
       traits:
         builder:
           configuration:
             properties:
-            - build-property = 1
+            - "build-property=${CURRENT_USER_NAMESPACE}"

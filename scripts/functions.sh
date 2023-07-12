@@ -61,22 +61,3 @@ inject_peak_workload() {
   go run ./cmd/perf generate --parallelism $parallelism --number $workload --namespace-prefix $prefix $full_template
   popd > /dev/null || return
 }
-
-create_users_with_custom_build() {
-  num=$1
-  prefix=$2
-
-  echo "Creating $num Camel users with custom build in namespaces $prefix..."
-
-  pushd . > /dev/null
-  cd $location && cd ../../toolchain-e2e/ || return
-
-  for ((i=1;i<=$num;i++))
-  do
-    sed -e "s/build-property =.*$/build-property = $i/" ../camel-k-perf/templates/camel-build-template.yaml > /tmp/camel-build-$i.yaml
-
-    go run setup/main.go --interactive=false --template /tmp/camel-build-$i.yaml --users 1 --default 0 --custom 1 --username $prefix-$i
-  done
-
-  popd > /dev/null || return
-}
